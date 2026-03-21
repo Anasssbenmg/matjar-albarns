@@ -8,32 +8,35 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { Trash2, Plus, Minus, ShoppingBag, MessageCircle } from "lucide-react";
 import { getIconComponent } from '@/lib/store-data';
-import { useToast } from '@/hooks/use-toast';
+
+const WHATSAPP_NUMBER = '963997861597';
 
 export function CartDrawer() {
   const { items, total, isCartOpen, setIsCartOpen, updateQuantity, removeItem, clearCart } = useCart();
-  const { toast } = useToast();
 
   const handleCheckout = () => {
     if (items.length === 0) return;
-    
-    toast({
-      title: "تم توجيهك للدفع",
-      description: "جاري تجهيز طلبك...",
-      className: "border-primary bg-card/80 backdrop-blur-md",
+
+    let message = '🛒 *طلب جديد من ريدار ستور*\n\n';
+    message += '📦 *المنتجات:*\n';
+
+    items.forEach((item) => {
+      const lineTotal = (item.option.price * item.quantity).toFixed(2);
+      message += `• ${item.product.name}\n`;
+      message += `  ↳ ${item.option.name} × ${item.quantity} = $${lineTotal}\n`;
     });
-    
-    setTimeout(() => {
-      clearCart();
-      setIsCartOpen(false);
-      toast({
-        title: "تم إتمام الطلب بنجاح! 🎉",
-        description: "شكراً لتسوقك من ريدار ستور",
-        className: "border-green-500 bg-card/80 backdrop-blur-md",
-      });
-    }, 1500);
+
+    message += `\n💰 *المجموع الإجمالي: $${total.toFixed(2)}*\n\n`;
+    message += '⚡ يرجى تأكيد الطلب وإتمام الدفع';
+
+    const encodedMessage = encodeURIComponent(message);
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+    clearCart();
+    setIsCartOpen(false);
+    window.open(waUrl, '_blank');
   };
 
   return (
@@ -74,7 +77,7 @@ export function CartDrawer() {
                     </div>
                     
                     <div className="flex items-center justify-between mt-2">
-                      <p className="font-bold text-primary">{item.option.price} ر.س</p>
+                      <p className="font-bold text-primary">${item.option.price}</p>
                       
                       <div className="flex items-center gap-2 bg-background/50 rounded-lg p-1 border border-border">
                         <button 
@@ -110,13 +113,14 @@ export function CartDrawer() {
           <SheetFooter className="pt-4 border-t border-border flex flex-col gap-4 sm:flex-col">
             <div className="flex items-center justify-between w-full">
               <span className="text-muted-foreground font-medium">المجموع الإجمالي:</span>
-              <span className="text-2xl font-bold gradient-text">{total} ر.س</span>
+              <span className="text-2xl font-bold gradient-text">${total.toFixed(2)}</span>
             </div>
             <Button 
-              className="w-full bg-gradient-to-l from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white font-bold text-lg py-6 rounded-xl shadow-lg shadow-primary/25 border-0"
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold text-lg py-6 rounded-xl shadow-lg shadow-green-500/25 border-0 flex items-center gap-2"
               onClick={handleCheckout}
             >
-              إتمام الطلب
+              <MessageCircle className="w-5 h-5" />
+              إتمام الطلب عبر واتساب
             </Button>
           </SheetFooter>
         )}

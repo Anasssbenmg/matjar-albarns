@@ -58,7 +58,7 @@ function App() {
               <CartDrawer />
               {/* WhatsApp Floating Button */}
               <a
-                href="https://wa.me/212600000000"
+                href="https://wa.me/963997861597"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center shadow-lg shadow-green-500/40 transition-all hover:scale-110"

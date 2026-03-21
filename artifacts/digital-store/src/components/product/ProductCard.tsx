@@ -55,8 +55,8 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
 
         <div className="mt-auto pt-3 border-t border-white/5 flex items-center justify-between">
           <div>
-            <p className="text-[10px] text-muted-foreground mb-0.5">تبدأ من</p>
-            <p className="text-base font-black gradient-text leading-none">{minPrice} ر.س</p>
+            <p className="text-[10px] text-muted-foreground mb-0.5">{product.isCustom ? 'السعر' : 'تبدأ من'}</p>
+            <p className="text-base font-black gradient-text leading-none">{product.isCustom ? 'حسب الطلب' : `$${minPrice}`}</p>
           </div>
           
           <button className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-gradient-to-br group-hover:from-primary group-hover:to-accent group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-primary/30">

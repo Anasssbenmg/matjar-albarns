@@ -79,7 +79,7 @@ export function Balance() {
             لطلب شحن الرصيد، تواصل معنا مباشرة عبر واتساب وسنخدمك في أسرع وقت.
           </p>
           <a
-            href="https://wa.me/212600000000"
+            href="https://wa.me/963997861597"
             target="_blank"
             rel="noopener noreferrer"
           >

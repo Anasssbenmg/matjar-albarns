@@ -31,9 +31,11 @@ export function Footer() {
               <Button variant="outline" size="icon" className="rounded-full bg-secondary/50 border-white/5 hover:bg-primary hover:text-white hover:border-primary transition-all">
                 <Twitter className="w-4 h-4" />
               </Button>
-              <Button variant="outline" size="icon" className="rounded-full bg-secondary/50 border-white/5 hover:bg-primary hover:text-white hover:border-primary transition-all">
-                <MessageCircle className="w-4 h-4" />
-              </Button>
+              <a href="https://wa.me/963997861597" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="icon" className="rounded-full bg-secondary/50 border-white/5 hover:bg-green-500 hover:text-white hover:border-green-500 transition-all">
+                  <MessageCircle className="w-4 h-4" />
+                </Button>
+              </a>
             </div>
           </div>
 
@@ -52,24 +54,24 @@ export function Footer() {
           <div className="md:col-span-4 space-y-6">
             <h4 className="font-bold text-lg text-foreground">تواصل معنا</h4>
             <div className="p-6 rounded-2xl bg-secondary/30 border border-white/5 space-y-4">
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <MessageCircle className="w-5 h-5 text-primary" />
+              <a href="https://wa.me/963997861597" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-sm text-muted-foreground hover:text-foreground transition-colors group">
+                <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center shrink-0 group-hover:bg-green-500/20 transition-colors">
+                  <MessageCircle className="w-5 h-5 text-green-500" />
                 </div>
                 <div>
                   <p className="font-bold text-foreground mb-1">دعم واتساب 24/7</p>
-                  <p dir="ltr" className="text-right">+212 600 000 000</p>
+                  <p dir="ltr" className="text-right">+963 997 861 597</p>
                 </div>
-              </div>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+              </a>
+              <a href="mailto:matgernumber@gmail.com" className="flex items-center gap-4 text-sm text-muted-foreground hover:text-foreground transition-colors group">
+                <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors">
                   <Mail className="w-5 h-5 text-accent" />
                 </div>
                 <div>
                   <p className="font-bold text-foreground mb-1">البريد الإلكتروني</p>
-                  <p dir="ltr" className="text-right">support@ridarstore.com</p>
+                  <p dir="ltr" className="text-right">matgernumber@gmail.com</p>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
 

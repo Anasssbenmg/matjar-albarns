@@ -92,7 +92,7 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
                 <span className={`font-bold mb-2 ${selectedOptionId === option.id ? 'text-primary' : 'text-foreground'}`}>
                   {option.name}
                 </span>
-                <span className="text-lg font-black gradient-text">{option.price} ر.س</span>
+                <span className="text-lg font-black gradient-text">${option.price}</span>
                 
                 {selectedOptionId === option.id && (
                   <CheckCircle2 className="w-5 h-5 text-primary absolute top-2 right-2 animate-in zoom-in" />
@@ -104,7 +104,7 @@ export function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
           <DialogFooter className="sm:justify-between items-center flex-row-reverse">
             <div className="flex flex-col items-start hidden sm:flex">
               <span className="text-xs text-muted-foreground font-medium">السعر النهائي</span>
-              <span className="text-2xl font-black text-foreground">{selectedOption?.price} ر.س</span>
+              <span className="text-2xl font-black text-foreground">${selectedOption?.price}</span>
             </div>
             
             <Button 
