@@ -16,6 +16,7 @@ export function Home() {
   const games = getProductsByCategory('games');
   const accounts = getProductsByCategory('accounts');
   const social = getProductsByCategory('social');
+  const balance = getProductsByCategory('balance');
 
   const trustBadges = [
     { icon: Zap, title: "شحن فوري", desc: "تسليم تلقائي بعد الدفع مباشرة" },
@@ -77,7 +78,7 @@ export function Home() {
       bg: "from-emerald-900 to-green-900",
       glow: "bg-emerald-500/20",
       icon: Wallet,
-      count: null,
+      count: balance.length,
     },
   ];
 
