@@ -19,7 +19,13 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const { getSectionLabel } = useSettings();
+  const { getSectionLabel, getAllCategories } = useSettings();
+
+  const PREDEFINED_IDS = new Set(['subscriptions', 'gift-cards', 'games', 'accounts', 'social', 'balance']);
+
+  const customCategoryLinks = getAllCategories()
+    .filter(c => !PREDEFINED_IDS.has(c.id))
+    .map(c => ({ name: c.label, path: `/category/${c.id}` }));
 
   const navLinks = [
     { name: 'الرئيسية', path: '/' },
@@ -29,6 +35,7 @@ export function Navbar() {
     { name: getSectionLabel('accounts').nav,      path: '/accounts' },
     { name: getSectionLabel('social').nav,        path: '/social' },
     { name: getSectionLabel('balance').nav,       path: '/balance' },
+    ...customCategoryLinks,
   ];
 
   return (

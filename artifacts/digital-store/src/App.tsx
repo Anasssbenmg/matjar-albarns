@@ -18,6 +18,7 @@ import { ReadyAccounts } from "@/pages/ReadyAccounts";
 import { Social } from "@/pages/Social";
 import { Balance } from "@/pages/Balance";
 import AdminPage from "@/pages/Admin";
+import { CategoryPage } from "@/pages/CategoryPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ function Router() {
         <Route path="/social" component={Social} />
         <Route path="/balance" component={Balance} />
         <Route path="/admin" component={AdminPage} />
+        <Route path="/category/:catId" component={CategoryPage} />
         <Route component={NotFound} />
       </Switch>
     </main>

@@ -7,9 +7,11 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { ProductModal } from '@/components/product/ProductModal';
 import { useSettings } from '@/lib/settings-context';
 
+const PREDEFINED_IDS = new Set(['subscriptions', 'gift-cards', 'games', 'accounts', 'social', 'balance']);
+
 export function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const { getSectionLabel, getProductsByCategory } = useSettings();
+  const { getSectionLabel, getProductsByCategory, getAllCategories } = useSettings();
 
   const subscriptions = getProductsByCategory('subscriptions');
   const giftCards = getProductsByCategory('gift-cards');
@@ -80,6 +82,17 @@ export function Home() {
       icon: Wallet,
       count: balance.length,
     },
+    ...getAllCategories()
+      .filter(c => !PREDEFINED_IDS.has(c.id))
+      .map(c => ({
+        href: `/category/${c.id}`,
+        title: c.label,
+        desc: "",
+        bg: "from-slate-800 to-slate-900",
+        glow: "bg-slate-500/20",
+        icon: Zap,
+        count: getProductsByCategory(c.id).length,
+      })),
   ];
 
   const featured = [
