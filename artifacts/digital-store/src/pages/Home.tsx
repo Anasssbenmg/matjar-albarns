@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import { SUBSCRIPTIONS, GIFT_CARDS, GAMES, ACCOUNT_PRODUCTS, SOCIAL_PRODUCTS, Product } from '@/lib/store-data';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductModal } from '@/components/product/ProductModal';
+import { useSettings } from '@/lib/settings-context';
 
 export function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const { getSectionLabel } = useSettings();
 
   const trustBadges = [
     { icon: Zap, title: "شحن فوري", desc: "تسليم تلقائي بعد الدفع مباشرة" },
@@ -19,7 +21,7 @@ export function Home() {
   const categories = [
     {
       href: "/subscriptions",
-      title: "الاشتراكات الرقمية",
+      title: getSectionLabel('subscriptions').page,
       desc: "Netflix، شاهد، Gemini، CapCut، Canva Pro",
       bg: "from-violet-900 to-indigo-900",
       glow: "bg-violet-500/20",
@@ -28,7 +30,7 @@ export function Home() {
     },
     {
       href: "/gift-cards",
-      title: "البطاقات الرقمية",
+      title: getSectionLabel('gift-cards').page,
       desc: "iTunes، Google Play، شام، USDT",
       bg: "from-blue-900 to-cyan-900",
       glow: "bg-cyan-500/20",
@@ -37,7 +39,7 @@ export function Home() {
     },
     {
       href: "/games",
-      title: "شحن الألعاب",
+      title: getSectionLabel('games').page,
       desc: "فورتنايت، ببجي، كلاش والمزيد",
       bg: "from-orange-900 to-red-900",
       glow: "bg-orange-500/20",
@@ -46,7 +48,7 @@ export function Home() {
     },
     {
       href: "/accounts",
-      title: "حسابات جاهزة",
+      title: getSectionLabel('accounts').page,
       desc: "Gmail، TikTok، Twitter، Facebook، Telegram",
       bg: "from-sky-900 to-blue-900",
       glow: "bg-sky-500/20",
@@ -55,7 +57,7 @@ export function Home() {
     },
     {
       href: "/social",
-      title: "سوشيال ميديا",
+      title: getSectionLabel('social').page,
       desc: "متابعين انستغرام، تيك توك، يوتيوب، فيسبوك",
       bg: "from-pink-900 to-rose-900",
       glow: "bg-pink-500/20",
@@ -64,7 +66,7 @@ export function Home() {
     },
     {
       href: "/balance",
-      title: "شحن الرصيد",
+      title: getSectionLabel('balance').page,
       desc: "Rcell، MTN، Syriatel — عبر شام كاش",
       bg: "from-emerald-900 to-green-900",
       glow: "bg-emerald-500/20",

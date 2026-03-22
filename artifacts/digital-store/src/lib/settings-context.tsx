@@ -1,9 +1,24 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
+export interface SectionLabel {
+  nav: string;
+  page: string;
+}
+
+export const DEFAULT_SECTION_LABELS: Record<string, SectionLabel> = {
+  subscriptions: { nav: 'اشتراكات', page: 'الاشتراكات الرقمية' },
+  'gift-cards':  { nav: 'بطاقات',   page: 'البطاقات الرقمية' },
+  games:         { nav: 'ألعاب',    page: 'شحن الألعاب' },
+  accounts:      { nav: 'حسابات جاهزة', page: 'حسابات جاهزة' },
+  social:        { nav: 'سوشيال',   page: 'سوشيال ميديا' },
+  balance:       { nav: 'رصيد',     page: 'شحن الرصيد' },
+};
+
 interface Settings {
   logo?: string;
   productImages?: Record<string, string>;
   adminPassword?: string;
+  sectionLabels?: Record<string, SectionLabel>;
 }
 
 interface SettingsContextType {
@@ -12,6 +27,7 @@ interface SettingsContextType {
   updateSetting: (key: string, value: string) => Promise<void>;
   deleteSetting: (key: string) => Promise<void>;
   getProductImage: (productId: string) => string | undefined;
+  getSectionLabel: (key: string) => SectionLabel;
 }
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
@@ -45,11 +61,10 @@ function parseSettings(raw: Record<string, string>): Settings {
   if (raw.logo) settings.logo = raw.logo;
   if (raw.adminPassword) settings.adminPassword = raw.adminPassword;
   if (raw.productImages) {
-    try {
-      settings.productImages = JSON.parse(raw.productImages);
-    } catch {
-      settings.productImages = {};
-    }
+    try { settings.productImages = JSON.parse(raw.productImages); } catch { settings.productImages = {}; }
+  }
+  if (raw.sectionLabels) {
+    try { settings.sectionLabels = JSON.parse(raw.sectionLabels); } catch { settings.sectionLabels = {}; }
   }
   return settings;
 }
@@ -61,9 +76,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const fetchSettings = useCallback(async () => {
     try {
       const res = await apiGet('/api/settings');
-      if (res.success) {
-        setSettings(parseSettings(res.data));
-      }
+      if (res.success) setSettings(parseSettings(res.data));
     } catch {
       // silently ignore - store works without API
     } finally {
@@ -71,9 +84,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  useEffect(() => {
-    fetchSettings();
-  }, [fetchSettings]);
+  useEffect(() => { fetchSettings(); }, [fetchSettings]);
 
   const updateSetting = useCallback(async (key: string, value: string) => {
     await apiPost('/api/settings', { key, value });
@@ -89,8 +100,17 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     return settings.productImages?.[productId];
   }, [settings.productImages]);
 
+  const getSectionLabel = useCallback((key: string): SectionLabel => {
+    const saved = settings.sectionLabels?.[key];
+    const def = DEFAULT_SECTION_LABELS[key] ?? { nav: key, page: key };
+    return {
+      nav:  saved?.nav  || def.nav,
+      page: saved?.page || def.page,
+    };
+  }, [settings.sectionLabels]);
+
   return (
-    <SettingsContext.Provider value={{ settings, loading, updateSetting, deleteSetting, getProductImage }}>
+    <SettingsContext.Provider value={{ settings, loading, updateSetting, deleteSetting, getProductImage, getSectionLabel }}>
       {children}
     </SettingsContext.Provider>
   );

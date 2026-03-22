@@ -19,14 +19,16 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const { getSectionLabel } = useSettings();
+
   const navLinks = [
     { name: 'الرئيسية', path: '/' },
-    { name: 'اشتراكات', path: '/subscriptions' },
-    { name: 'بطاقات', path: '/gift-cards' },
-    { name: 'ألعاب', path: '/games' },
-    { name: 'حسابات جاهزة', path: '/accounts' },
-    { name: 'سوشيال', path: '/social' },
-    { name: 'رصيد', path: '/balance' },
+    { name: getSectionLabel('subscriptions').nav, path: '/subscriptions' },
+    { name: getSectionLabel('gift-cards').nav,    path: '/gift-cards' },
+    { name: getSectionLabel('games').nav,         path: '/games' },
+    { name: getSectionLabel('accounts').nav,      path: '/accounts' },
+    { name: getSectionLabel('social').nav,        path: '/social' },
+    { name: getSectionLabel('balance').nav,       path: '/balance' },
   ];
 
   return (

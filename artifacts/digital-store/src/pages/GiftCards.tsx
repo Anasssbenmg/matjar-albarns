@@ -3,9 +3,12 @@ import { GIFT_CARDS, Product } from '@/lib/store-data';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductModal } from '@/components/product/ProductModal';
 import { CreditCard } from 'lucide-react';
+import { useSettings } from '@/lib/settings-context';
 
 export function GiftCards() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const { getSectionLabel } = useSettings();
+  const label = getSectionLabel('gift-cards');
 
   return (
     <div className="min-h-screen pt-28 pb-32">
@@ -19,7 +22,7 @@ export function GiftCards() {
               <CreditCard className="w-10 h-10 text-white" />
             </div>
             <div className="text-center md:text-start">
-              <h1 className="text-4xl font-black text-foreground mb-3">البطاقات الرقمية</h1>
+              <h1 className="text-4xl font-black text-foreground mb-3">{label.page}</h1>
               <p className="text-lg text-muted-foreground max-w-2xl">
                 iTunes، Google Play، شام، وUSDT - بأسعار منافسة وتسليم فوري مضمون.
               </p>

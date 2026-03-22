@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, MessageCircle, CheckCircle2, Zap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useSettings } from '@/lib/settings-context';
 
 const operators = [
   {
@@ -33,6 +34,9 @@ const operators = [
 ];
 
 export function Balance() {
+  const { getSectionLabel } = useSettings();
+  const label = getSectionLabel('balance');
+
   return (
     <div className="min-h-screen pt-28 pb-32">
       <div className="container mx-auto px-4">
@@ -45,7 +49,7 @@ export function Balance() {
               <Phone className="w-10 h-10 text-white" />
             </div>
             <div className="text-center md:text-start">
-              <h1 className="text-4xl font-black text-foreground mb-3">شحن الرصيد</h1>
+              <h1 className="text-4xl font-black text-foreground mb-3">{label.page}</h1>
               <p className="text-lg text-muted-foreground max-w-2xl">
                 شحن رصيد لجميع شبكات الجوال السورية — Rcell، MTN، Syriatel — بالدفع عبر شام كاش.
               </p>

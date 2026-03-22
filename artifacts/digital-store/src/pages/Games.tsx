@@ -3,9 +3,12 @@ import { GAMES, Product } from '@/lib/store-data';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductModal } from '@/components/product/ProductModal';
 import { Gamepad2 } from 'lucide-react';
+import { useSettings } from '@/lib/settings-context';
 
 export function Games() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const { getSectionLabel } = useSettings();
+  const label = getSectionLabel('games');
 
   return (
     <div className="min-h-screen pt-28 pb-32">
@@ -19,7 +22,7 @@ export function Games() {
               <Gamepad2 className="w-10 h-10 text-white" />
             </div>
             <div className="text-center md:text-start">
-              <h1 className="text-4xl font-black text-foreground mb-3">شحن الألعاب</h1>
+              <h1 className="text-4xl font-black text-foreground mb-3">{label.page}</h1>
               <p className="text-lg text-muted-foreground max-w-2xl">
                 شحن فوري لأشهر الألعاب: فورتنايت، ببجي، كلاش أوف كلانس وغيرها - بأسعار منافسة وتسليم مضمون.
               </p>
