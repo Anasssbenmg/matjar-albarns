@@ -122,7 +122,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const fetchSettings = useCallback(async () => {
     try {
       const res = await apiGet('/api/settings');
-      if (res.success) setSettings(parseSettings(res.data));
+      if (res.success) {
+        const parsed = parseSettings(res.data);
+        if (!parsed.productsData) {
+          const defaults = getDefaultProductsData();
+          await apiPost('/api/settings', { key: 'productsData', value: JSON.stringify(defaults) });
+          parsed.productsData = defaults;
+        }
+        setSettings(parsed);
+      }
     } catch {
       // silently ignore - store works without API
     } finally {

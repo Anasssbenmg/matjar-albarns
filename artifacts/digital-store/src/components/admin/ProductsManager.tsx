@@ -415,14 +415,14 @@ export function ProductsManager() {
 
   async function handleDeleteCategory(catId: string) {
     const count = getCurrentData().products.filter(p => p.category === catId).length;
-    const msg = count > 0
-      ? `هذه الفئة تحتوي على ${count} منتج. هل تريد حذفها مع جميع منتجاتها؟`
-      : 'هل تريد حذف هذه الفئة الفارغة؟';
-    if (!confirm(msg)) return;
+    if (count > 0) {
+      alert(`لا يمكن حذف هذه الفئة لأنها تحتوي على ${count} منتج. يرجى حذف جميع منتجاتها أولاً.`);
+      return;
+    }
+    if (!confirm('هل تريد حذف هذه الفئة الفارغة؟')) return;
     const data = getCurrentData();
     const newCats = data.categories.filter(c => c.id !== catId);
-    const newProds = data.products.filter(p => p.category !== catId);
-    await save({ categories: newCats, products: newProds });
+    await save({ ...data, categories: newCats });
     if (activeCategory === catId) {
       setActiveCategory(newCats[0]?.id ?? '');
     }
