@@ -3,6 +3,7 @@ import { Product, CATEGORY_LABELS } from '@/lib/store-data';
 import { getIconComponent } from '@/lib/store-data';
 import { ShoppingCart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useSettings } from '@/lib/settings-context';
 
 interface ProductCardProps {
   product: Product;
@@ -13,6 +14,8 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
   const Icon = getIconComponent(product.iconName);
   const minPrice = Math.min(...product.options.map(o => o.price));
   const label = CATEGORY_LABELS[product.category] || product.category;
+  const { getProductImage } = useSettings();
+  const productImage = getProductImage(product.id);
 
   return (
     <div 
@@ -23,7 +26,15 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
         <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.08)_50%,transparent_75%)] bg-[length:12px_12px]" />
         <div className="absolute inset-0 bg-black/10" />
         
-        <Icon className="w-14 h-14 text-white drop-shadow-xl relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]" />
+        {productImage ? (
+          <img
+            src={productImage}
+            alt={product.name}
+            className="w-20 h-20 object-cover rounded-2xl relative z-10 shadow-xl transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <Icon className="w-14 h-14 text-white drop-shadow-xl relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]" />
+        )}
         
         <div className="absolute top-3 right-3 flex flex-col gap-1 items-end">
           <Badge className="bg-black/50 backdrop-blur-md text-white border-white/10 font-bold text-[10px] px-2 py-0.5">

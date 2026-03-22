@@ -16,6 +16,29 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
 
+## Digital Products Store
+
+A full Arabic RTL digital products store ("ريدار ستور") for selling gift cards, subscriptions, accounts, etc.
+
+### Key Features
+- WhatsApp checkout (+963997861597) with full order message
+- Admin panel at `/admin` (password: `ridar2025`) — change via `adminPassword` setting
+- Product image upload per product + store logo upload
+- Server-side sync via `store_settings` table in PostgreSQL
+- API at path `/api`, digital store at path `/`
+
+### Important Files
+- `artifacts/digital-store/src/lib/settings-context.tsx` — React context for server-synced settings
+- `artifacts/digital-store/src/pages/Admin.tsx` — Admin panel with image uploads
+- `artifacts/api-server/src/routes/settings.ts` — Settings API routes
+- `lib/db/src/schema/settings.ts` — `store_settings` table schema
+- `artifacts/digital-store/src/lib/store-data.ts` — All product data
+
+### API Routes
+- `GET /api/settings` — Get all settings as key-value map
+- `POST /api/settings` — Upsert a setting `{key, value}`
+- `DELETE /api/settings/:key` — Delete a setting
+
 ## Structure
 
 ```text

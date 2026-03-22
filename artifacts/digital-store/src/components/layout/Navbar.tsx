@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
-import { Button } from '@/components/ui/button';
+import { useSettings } from '@/lib/settings-context';
 
 export function Navbar() {
   const [location] = useLocation();
   const { itemCount, setIsCartOpen } = useCart();
+  const { settings } = useSettings();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -35,10 +36,14 @@ export function Navbar() {
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between gap-4">
         
         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent p-0.5 shadow-lg group-hover:shadow-primary/40 transition-shadow">
-            <div className="w-full h-full bg-background rounded-[10px] flex items-center justify-center">
-              <span className="text-primary font-black text-base">R</span>
-            </div>
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent p-0.5 shadow-lg group-hover:shadow-primary/40 transition-shadow overflow-hidden">
+            {settings.logo ? (
+              <img src={settings.logo} alt="Logo" className="w-full h-full object-cover rounded-[10px]" />
+            ) : (
+              <div className="w-full h-full bg-background rounded-[10px] flex items-center justify-center">
+                <span className="text-primary font-black text-base">R</span>
+              </div>
+            )}
           </div>
           <div className="font-black text-lg tracking-tight leading-none">
             <span className="text-foreground">ريدار <span className="gradient-text">ستور</span></span>
