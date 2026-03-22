@@ -111,7 +111,12 @@ function parseSettings(raw: Record<string, string>): Settings {
     try { settings.sectionLabels = JSON.parse(raw.sectionLabels); } catch { settings.sectionLabels = {}; }
   }
   if (raw.productsData) {
-    try { settings.productsData = JSON.parse(raw.productsData); } catch { settings.productsData = undefined; }
+    try {
+      const parsed = JSON.parse(raw.productsData);
+      if (parsed && typeof parsed === 'object' && Array.isArray(parsed.categories) && Array.isArray(parsed.products)) {
+        settings.productsData = parsed as ProductsData;
+      }
+    } catch { settings.productsData = undefined; }
   }
   return settings;
 }

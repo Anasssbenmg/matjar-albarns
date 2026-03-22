@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   Plus, Trash2, Pencil, X, Check, ChevronDown, ChevronUp,
   Package, FolderPlus, AlertCircle,
@@ -6,6 +6,7 @@ import {
 import { useSettings, getDefaultProductsData, type ProductCategoryDef, type ProductsData } from '@/lib/settings-context';
 import { type Product, type ProductOption, getIconComponent, ICON_NAMES } from '@/lib/store-data';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 const GRADIENT_OPTIONS = [
   { label: 'أحمر', value: 'from-red-600 to-red-900', bg: 'linear-gradient(to bottom right, #dc2626, #7f1d1d)' },
@@ -346,6 +347,7 @@ function SaveButtons({ form, saving, onSave, onCancel }: {
 
 export function ProductsManager() {
   const { settings, getProductsByCategory, getAllCategories, updateProductsData } = useSettings();
+  const { toast } = useToast();
 
   const [activeCategory, setActiveCategory] = useState<string>('subscriptions');
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -375,6 +377,12 @@ export function ProductsManager() {
     setSaving(true);
     try {
       await updateProductsData(data);
+    } catch {
+      toast({
+        title: "خطأ في الحفظ",
+        description: "تعذّر حفظ التغييرات. يرجى المحاولة مجدداً.",
+        variant: "destructive",
+      });
     } finally {
       setSaving(false);
     }
@@ -525,20 +533,28 @@ export function ProductsManager() {
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => { setActiveCategory(cat.id); setEditingId(null); setShowAddProduct(false); }}
-                onDoubleClick={() => { setRenaming(cat.id); setRenameValue(cat.label); }}
-                className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${
-                  activeCategory === cat.id
-                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                    : 'bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-secondary/80'
-                }`}
-              >
-                {cat.label}
-                <span className="mr-1.5 text-[10px] opacity-60">
-                  ({getCurrentData().products.filter(p => p.category === cat.id).length})
-                </span>
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => { setActiveCategory(cat.id); setEditingId(null); setShowAddProduct(false); }}
+                  className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${
+                    activeCategory === cat.id
+                      ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                      : 'bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-secondary/80'
+                  }`}
+                >
+                  {cat.label}
+                  <span className="mr-1.5 text-[10px] opacity-60">
+                    ({getCurrentData().products.filter(p => p.category === cat.id).length})
+                  </span>
+                </button>
+                <button
+                  onClick={() => { setRenaming(cat.id); setRenameValue(cat.label); }}
+                  className="p-1 rounded hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors"
+                  title="إعادة تسمية الفئة"
+                >
+                  <Pencil className="w-3 h-3" />
+                </button>
+              </div>
             )}
             {renaming !== cat.id && (
               <button
