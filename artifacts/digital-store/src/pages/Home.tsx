@@ -95,7 +95,7 @@ export function Home() {
         <div className="container mx-auto px-4 relative z-10 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/25 text-primary font-bold text-sm mb-8">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            متجر ريدار - وجهتك الأولى للخدمات الرقمية
+            متجر البرنس - وجهتك الأولى للخدمات الرقمية
           </div>
           
           <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight leading-[1.15] max-w-4xl mx-auto">

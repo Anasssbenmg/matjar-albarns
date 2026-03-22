@@ -19,7 +19,7 @@ export function CartDrawer() {
   const handleCheckout = () => {
     if (items.length === 0) return;
 
-    let message = '🛒 *طلب جديد من ريدار ستور*\n\n';
+    let message = '🛒 *طلب جديد من متجر البرنس*\n\n';
     message += '📦 *المنتجات:*\n';
 
     items.forEach((item) => {

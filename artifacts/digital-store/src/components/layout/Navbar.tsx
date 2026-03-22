@@ -41,12 +41,12 @@ export function Navbar() {
               <img src={settings.logo} alt="Logo" className="w-full h-full object-cover rounded-[10px]" />
             ) : (
               <div className="w-full h-full bg-background rounded-[10px] flex items-center justify-center">
-                <span className="text-primary font-black text-base">R</span>
+                <span className="text-primary font-black text-base">ب</span>
               </div>
             )}
           </div>
           <div className="font-black text-lg tracking-tight leading-none">
-            <span className="text-foreground">ريدار <span className="gradient-text">ستور</span></span>
+            <span className="text-foreground">متجر <span className="gradient-text">البرنس</span></span>
           </div>
         </Link>
 

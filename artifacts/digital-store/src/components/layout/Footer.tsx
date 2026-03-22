@@ -16,10 +16,10 @@ export function Footer() {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent p-0.5">
                 <div className="w-full h-full bg-background rounded-[10px] flex items-center justify-center">
-                  <span className="text-primary font-black text-base">R</span>
+                  <span className="text-primary font-black text-base">ب</span>
                 </div>
               </div>
-              <h3 className="font-black text-2xl text-foreground tracking-tight">ريدار <span className="text-primary">ستور</span></h3>
+              <h3 className="font-black text-2xl text-foreground tracking-tight">متجر <span className="text-primary">البرنس</span></h3>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
               أسرع منصة عربية لشحن التطبيقات والألعاب والاشتراكات الرقمية. خدماتنا متوفرة 24/7 لضمان أفضل تجربة تسوق.
@@ -79,7 +79,7 @@ export function Footer() {
 
         <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-muted-foreground text-sm">
-            جميع الحقوق محفوظة &copy; {new Date().getFullYear()} <span className="font-bold text-foreground">ريدار ستور</span>
+            جميع الحقوق محفوظة &copy; {new Date().getFullYear()} <span className="font-bold text-foreground">متجر البرنس</span>
           </p>
         </div>
       </div>
