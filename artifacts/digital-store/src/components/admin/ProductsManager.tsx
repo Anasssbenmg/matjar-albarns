@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
   Plus, Trash2, Pencil, X, Check, ChevronDown, ChevronUp,
-  Package, FolderPlus, AlertCircle, GripVertical,
+  Package, FolderPlus, AlertCircle,
 } from 'lucide-react';
 import { useSettings, getDefaultProductsData, type ProductCategoryDef, type ProductsData } from '@/lib/settings-context';
 import { type Product, type ProductOption, getIconComponent, ICON_NAMES } from '@/lib/store-data';
@@ -303,23 +303,43 @@ function ProductForm({
         </div>
       )}
 
-      <div className="flex gap-3 pt-1">
-        <Button
-          onClick={() => form.name.trim() && onSave(form)}
-          disabled={saving || !form.name.trim()}
-          className="flex-1 bg-gradient-to-l from-primary to-accent text-white font-bold"
-        >
-          {saving ? <span className="animate-pulse">جاري الحفظ...</span> : <><Check className="w-4 h-4 ml-1.5" />حفظ</>}
-        </Button>
-        <Button
-          onClick={onCancel}
-          variant="ghost"
-          disabled={saving}
-          className="border border-white/10 text-muted-foreground hover:text-foreground"
-        >
-          إلغاء
-        </Button>
-      </div>
+      {form.options.filter(o => o.name.trim()).length === 0 && (
+        <div className="flex items-center gap-2 px-3 py-2 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+          <p className="text-xs text-amber-400">يجب إضافة خيار سعر واحد على الأقل باسم صحيح</p>
+        </div>
+      )}
+
+      <SaveButtons form={form} saving={saving} onSave={onSave} onCancel={onCancel} />
+    </div>
+  );
+}
+
+function SaveButtons({ form, saving, onSave, onCancel }: {
+  form: ProductFormData;
+  saving: boolean;
+  onSave: (data: ProductFormData) => void;
+  onCancel: () => void;
+}) {
+  const hasValidOption = form.options.some(o => o.name.trim());
+  const canSave = !!form.name.trim() && hasValidOption;
+  return (
+    <div className="flex gap-3 pt-1">
+      <Button
+        onClick={() => canSave && onSave(form)}
+        disabled={saving || !canSave}
+        className="flex-1 bg-gradient-to-l from-primary to-accent text-white font-bold"
+      >
+        {saving ? <span className="animate-pulse">جاري الحفظ...</span> : <><Check className="w-4 h-4 ml-1.5" />حفظ</>}
+      </Button>
+      <Button
+        onClick={onCancel}
+        variant="ghost"
+        disabled={saving}
+        className="border border-white/10 text-muted-foreground hover:text-foreground"
+      >
+        إلغاء
+      </Button>
     </div>
   );
 }

@@ -12,7 +12,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onClick }: ProductCardProps) {
   const Icon = getIconComponent(product.iconName);
-  const minPrice = Math.min(...product.options.map(o => o.price));
+  const minPrice = product.options.length > 0 ? Math.min(...product.options.map(o => o.price)) : 0;
   const label = CATEGORY_LABELS[product.category] || product.category;
   const { getProductImage } = useSettings();
   const productImage = getProductImage(product.id);
