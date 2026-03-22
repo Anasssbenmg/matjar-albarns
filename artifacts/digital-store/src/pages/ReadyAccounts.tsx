@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ACCOUNT_PRODUCTS, Product } from '@/lib/store-data';
+import type { Product } from '@/lib/store-data';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductModal } from '@/components/product/ProductModal';
 import { Users } from 'lucide-react';
@@ -7,8 +7,9 @@ import { useSettings } from '@/lib/settings-context';
 
 export function ReadyAccounts() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const { getSectionLabel } = useSettings();
+  const { getSectionLabel, getProductsByCategory } = useSettings();
   const label = getSectionLabel('accounts');
+  const products = getProductsByCategory('accounts');
 
   return (
     <div className="min-h-screen pt-28 pb-32">
@@ -23,14 +24,14 @@ export function ReadyAccounts() {
             <div className="text-center md:text-start">
               <h1 className="text-4xl font-black text-foreground mb-3">{label.page}</h1>
               <p className="text-lg text-muted-foreground max-w-2xl">
-                Gmail، TikTok، Twitter، Facebook، WhatsApp، Telegram، Snapchat، Instagram - حسابات جاهزة بسعر $1.5
+                حسابات جاهزة بسعر مناسب وتسليم فوري مضمون.
               </p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {ACCOUNT_PRODUCTS.map(product => (
+          {products.map(product => (
             <ProductCard 
               key={product.id} 
               product={product} 

@@ -12,12 +12,12 @@ export type ProductOption = {
   price: number;
 };
 
-export type ProductCategory = "subscriptions" | "gift-cards" | "games" | "accounts" | "social";
+export type ProductCategory = string;
 
 export type Product = {
   id: string;
   name: string;
-  category: ProductCategory;
+  category: string;
   iconName: string;
   color: string;
   options: ProductOption[];
@@ -32,6 +32,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   games: "ألعاب",
   accounts: "حسابات",
   social: "سوشيال",
+  balance: "رصيد",
 };
 
 export const SUBSCRIPTIONS: Product[] = [
@@ -358,7 +359,7 @@ export const BALANCE_PRODUCTS: Product[] = [
   {
     id: "bal-syriatel",
     name: "سيريتل (Syriatel)",
-    category: "gift-cards",
+    category: "balance",
     iconName: "Phone",
     color: "from-red-600 to-red-800",
     features: ["شحن رصيد فوري", "داخل سوريا", "بالليرة السورية"],
@@ -377,6 +378,8 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   Twitter, Users, CreditCard, Wifi, Phone, Wallet, Hash, Ghost,
   Instagram, Bird, Scissors, Palette, Bot, Mail, Video
 };
+
+export const ICON_NAMES = Object.keys(iconMap);
 
 export function getIconComponent(iconName: string): React.ComponentType<any> {
   return iconMap[iconName] || Package;

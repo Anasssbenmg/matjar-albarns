@@ -1,4 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import {
+  SUBSCRIPTIONS, GIFT_CARDS, GAMES, ACCOUNT_PRODUCTS, SOCIAL_PRODUCTS, BALANCE_PRODUCTS,
+  type Product,
+} from './store-data';
 
 export interface SectionLabel {
   nav: string;
@@ -14,11 +18,47 @@ export const DEFAULT_SECTION_LABELS: Record<string, SectionLabel> = {
   balance:       { nav: 'رصيد',     page: 'شحن الرصيد' },
 };
 
+export interface ProductCategoryDef {
+  id: string;
+  label: string;
+}
+
+export interface ProductsData {
+  categories: ProductCategoryDef[];
+  products: Product[];
+}
+
+const DEFAULT_CATEGORIES: ProductCategoryDef[] = [
+  { id: 'subscriptions', label: 'اشتراكات' },
+  { id: 'gift-cards', label: 'بطاقات' },
+  { id: 'games', label: 'ألعاب' },
+  { id: 'accounts', label: 'حسابات' },
+  { id: 'social', label: 'سوشيال' },
+  { id: 'balance', label: 'رصيد' },
+];
+
+const DEFAULT_PRODUCTS: Product[] = [
+  ...SUBSCRIPTIONS,
+  ...GIFT_CARDS,
+  ...GAMES,
+  ...ACCOUNT_PRODUCTS,
+  ...SOCIAL_PRODUCTS,
+  ...BALANCE_PRODUCTS,
+];
+
+export function getDefaultProductsData(): ProductsData {
+  return {
+    categories: DEFAULT_CATEGORIES,
+    products: DEFAULT_PRODUCTS,
+  };
+}
+
 interface Settings {
   logo?: string;
   productImages?: Record<string, string>;
   adminPassword?: string;
   sectionLabels?: Record<string, SectionLabel>;
+  productsData?: ProductsData;
 }
 
 interface SettingsContextType {
@@ -28,6 +68,9 @@ interface SettingsContextType {
   deleteSetting: (key: string) => Promise<void>;
   getProductImage: (productId: string) => string | undefined;
   getSectionLabel: (key: string) => SectionLabel;
+  getProductsByCategory: (category: string) => Product[];
+  getAllCategories: () => ProductCategoryDef[];
+  updateProductsData: (data: ProductsData) => Promise<void>;
 }
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
@@ -65,6 +108,9 @@ function parseSettings(raw: Record<string, string>): Settings {
   }
   if (raw.sectionLabels) {
     try { settings.sectionLabels = JSON.parse(raw.sectionLabels); } catch { settings.sectionLabels = {}; }
+  }
+  if (raw.productsData) {
+    try { settings.productsData = JSON.parse(raw.productsData); } catch { settings.productsData = undefined; }
   }
   return settings;
 }
@@ -109,8 +155,30 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     };
   }, [settings.sectionLabels]);
 
+  const getProductsByCategory = useCallback((category: string): Product[] => {
+    const data = settings.productsData;
+    if (data) {
+      return data.products.filter(p => p.category === category);
+    }
+    return DEFAULT_PRODUCTS.filter(p => p.category === category);
+  }, [settings.productsData]);
+
+  const getAllCategories = useCallback((): ProductCategoryDef[] => {
+    const data = settings.productsData;
+    if (data) return data.categories;
+    return DEFAULT_CATEGORIES;
+  }, [settings.productsData]);
+
+  const updateProductsData = useCallback(async (data: ProductsData) => {
+    await apiPost('/api/settings', { key: 'productsData', value: JSON.stringify(data) });
+    await fetchSettings();
+  }, [fetchSettings]);
+
   return (
-    <SettingsContext.Provider value={{ settings, loading, updateSetting, deleteSetting, getProductImage, getSectionLabel }}>
+    <SettingsContext.Provider value={{
+      settings, loading, updateSetting, deleteSetting,
+      getProductImage, getSectionLabel, getProductsByCategory, getAllCategories, updateProductsData,
+    }}>
       {children}
     </SettingsContext.Provider>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SOCIAL_PRODUCTS, Product } from '@/lib/store-data';
+import type { Product } from '@/lib/store-data';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductModal } from '@/components/product/ProductModal';
 import { Users } from 'lucide-react';
@@ -7,8 +7,9 @@ import { useSettings } from '@/lib/settings-context';
 
 export function Social() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const { getSectionLabel } = useSettings();
+  const { getSectionLabel, getProductsByCategory } = useSettings();
   const label = getSectionLabel('social');
+  const products = getProductsByCategory('social');
 
   return (
     <div className="min-h-screen pt-28 pb-32">
@@ -31,7 +32,7 @@ export function Social() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SOCIAL_PRODUCTS.map(product => (
+          {products.map(product => (
             <ProductCard 
               key={product.id} 
               product={product} 

@@ -2,14 +2,20 @@ import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { Zap, ShieldCheck, Clock, HeadphonesIcon, ChevronLeft, ArrowLeft, Gamepad2, Users, Wallet, CreditCard, PlaySquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SUBSCRIPTIONS, GIFT_CARDS, GAMES, ACCOUNT_PRODUCTS, SOCIAL_PRODUCTS, Product } from '@/lib/store-data';
+import type { Product } from '@/lib/store-data';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductModal } from '@/components/product/ProductModal';
 import { useSettings } from '@/lib/settings-context';
 
 export function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const { getSectionLabel } = useSettings();
+  const { getSectionLabel, getProductsByCategory } = useSettings();
+
+  const subscriptions = getProductsByCategory('subscriptions');
+  const giftCards = getProductsByCategory('gift-cards');
+  const games = getProductsByCategory('games');
+  const accounts = getProductsByCategory('accounts');
+  const social = getProductsByCategory('social');
 
   const trustBadges = [
     { icon: Zap, title: "شحن فوري", desc: "تسليم تلقائي بعد الدفع مباشرة" },
@@ -26,7 +32,7 @@ export function Home() {
       bg: "from-violet-900 to-indigo-900",
       glow: "bg-violet-500/20",
       icon: PlaySquare,
-      count: SUBSCRIPTIONS.length,
+      count: subscriptions.length,
     },
     {
       href: "/gift-cards",
@@ -35,7 +41,7 @@ export function Home() {
       bg: "from-blue-900 to-cyan-900",
       glow: "bg-cyan-500/20",
       icon: CreditCard,
-      count: GIFT_CARDS.length,
+      count: giftCards.length,
     },
     {
       href: "/games",
@@ -44,7 +50,7 @@ export function Home() {
       bg: "from-orange-900 to-red-900",
       glow: "bg-orange-500/20",
       icon: Gamepad2,
-      count: GAMES.length,
+      count: games.length,
     },
     {
       href: "/accounts",
@@ -53,7 +59,7 @@ export function Home() {
       bg: "from-sky-900 to-blue-900",
       glow: "bg-sky-500/20",
       icon: Users,
-      count: ACCOUNT_PRODUCTS.length,
+      count: accounts.length,
     },
     {
       href: "/social",
@@ -62,7 +68,7 @@ export function Home() {
       bg: "from-pink-900 to-rose-900",
       glow: "bg-pink-500/20",
       icon: Users,
-      count: SOCIAL_PRODUCTS.length,
+      count: social.length,
     },
     {
       href: "/balance",
@@ -76,11 +82,11 @@ export function Home() {
   ];
 
   const featured = [
-    ...SUBSCRIPTIONS.slice(0, 2),
-    ...GAMES.slice(0, 2),
-    ...GIFT_CARDS.slice(0, 2),
-    ...ACCOUNT_PRODUCTS.slice(0, 1),
-    ...SOCIAL_PRODUCTS.slice(0, 1),
+    ...subscriptions.slice(0, 2),
+    ...games.slice(0, 2),
+    ...giftCards.slice(0, 2),
+    ...accounts.slice(0, 1),
+    ...social.slice(0, 1),
   ];
 
   return (

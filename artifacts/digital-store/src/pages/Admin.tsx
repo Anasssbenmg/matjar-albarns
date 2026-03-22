@@ -2,33 +2,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Shield, Upload, Trash2, LogIn, Eye, EyeOff, Save, Image, CheckCircle, Lock, LayoutList, RotateCcw } from 'lucide-react';
 import { useSettings, DEFAULT_SECTION_LABELS, type SectionLabel } from '@/lib/settings-context';
 import { Button } from '@/components/ui/button';
+import { ProductsManager } from '@/components/admin/ProductsManager';
 
 const DEFAULT_PASSWORD = 'ridar2025';
 
-const ALL_PRODUCTS = [
-  { id: 'sub-netflix', name: 'نتفليكس (Netflix)' },
-  { id: 'sub-shahid', name: 'شاهد (Shahid VIP)' },
-  { id: 'sub-gemini', name: 'جيميني (Gemini AI)' },
-  { id: 'sub-capcut', name: 'كاب كات (CapCut Pro)' },
-  { id: 'sub-canva', name: 'كانفا (Canva Pro)' },
-  { id: 'gc-itunes', name: 'بطاقات ايتونز (iTunes)' },
-  { id: 'gc-google', name: 'بطاقات غوغل (Google Play)' },
-  { id: 'gc-sham', name: 'شام (SHAM)' },
-  { id: 'gc-usdt', name: 'USDT (تيثر)' },
-  { id: 'game-clash', name: 'Clash of Clans' },
-  { id: 'game-fortnite', name: 'Fortnite V-Bucks' },
-  { id: 'game-pubg', name: 'PUBG UC' },
-  { id: 'acc-gmail', name: 'حساب Gmail' },
-  { id: 'acc-tiktok', name: 'حساب TikTok' },
-  { id: 'acc-twitter', name: 'حساب Twitter (X)' },
-  { id: 'acc-facebook', name: 'حساب Facebook' },
-  { id: 'acc-whatsapp', name: 'حساب WhatsApp' },
-  { id: 'acc-telegram', name: 'حساب Telegram' },
-  { id: 'acc-snapchat', name: 'حساب Snapchat' },
-  { id: 'acc-instagram', name: 'حساب Instagram' },
-  { id: 'soc-ig-followers', name: 'متابعين انستغرام' },
-  { id: 'soc-tt-followers', name: 'متابعين تيك توك' },
-  { id: 'bal-syriatel', name: 'رصيد سيريتل' },
+const SECTION_KEYS = [
+  { key: 'subscriptions', label: 'الاشتراكات' },
+  { key: 'gift-cards',   label: 'البطاقات' },
+  { key: 'games',        label: 'الألعاب' },
+  { key: 'accounts',     label: 'الحسابات' },
+  { key: 'social',       label: 'السوشيال' },
+  { key: 'balance',      label: 'الرصيد' },
 ];
 
 function resizeImage(file: File, maxSize = 300): Promise<string> {
@@ -54,17 +38,8 @@ function resizeImage(file: File, maxSize = 300): Promise<string> {
   });
 }
 
-const SECTION_KEYS = [
-  { key: 'subscriptions', label: 'الاشتراكات' },
-  { key: 'gift-cards',   label: 'البطاقات' },
-  { key: 'games',        label: 'الألعاب' },
-  { key: 'accounts',     label: 'الحسابات' },
-  { key: 'social',       label: 'السوشيال' },
-  { key: 'balance',      label: 'الرصيد' },
-];
-
 export default function AdminPage() {
-  const { settings, updateSetting, deleteSetting, getSectionLabel, loading } = useSettings();
+  const { settings, updateSetting, deleteSetting, getSectionLabel, getAllCategories, getProductsByCategory, loading } = useSettings();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -84,6 +59,10 @@ export default function AdminPage() {
     });
     setSectionDraft(draft);
   }, [settings.sectionLabels]);
+
+  const allProducts = getAllCategories().flatMap(cat =>
+    getProductsByCategory(cat.id).map(p => ({ id: p.id, name: p.name }))
+  );
 
   const correctPassword = settings.adminPassword || DEFAULT_PASSWORD;
 
@@ -225,7 +204,7 @@ export default function AdminPage() {
           </div>
           <div>
             <h1 className="text-3xl font-black text-foreground">لوحة الإدارة</h1>
-            <p className="text-muted-foreground text-sm">إدارة صور المنتجات واللوغو • التغييرات تُحفظ على السيرفر</p>
+            <p className="text-muted-foreground text-sm">إدارة المتجر • التغييرات تُحفظ على السيرفر</p>
           </div>
         </div>
 
@@ -356,35 +335,42 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {/* Products Manager */}
+        <ProductsManager />
+
         {/* Product Images Section */}
         <div className="glass-panel rounded-2xl p-6 border border-white/10">
           <h2 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
             <Image className="w-5 h-5 text-primary" />
             صور المنتجات
             <span className="text-sm font-normal text-muted-foreground mr-auto">
-              {Object.keys(settings.productImages || {}).length} من {ALL_PRODUCTS.length} منتج لديه صورة
+              {Object.keys(settings.productImages || {}).length} من {allProducts.length} منتج لديه صورة
             </span>
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {ALL_PRODUCTS.map(product => {
-              const image = settings.productImages?.[product.id];
-              const isSaving = saving === product.id;
-              const isSaved = savedOk === product.id;
+          {allProducts.length === 0 ? (
+            <p className="text-muted-foreground text-sm text-center py-8">لا توجد منتجات بعد</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {allProducts.map(product => {
+                const image = settings.productImages?.[product.id];
+                const isSaving = saving === product.id;
+                const isSaved = savedOk === product.id;
 
-              return (
-                <ProductImageCard
-                  key={product.id}
-                  product={product}
-                  image={image}
-                  isSaving={isSaving}
-                  isSaved={isSaved}
-                  onUpload={(file) => handleProductImageUpload(product.id, file)}
-                  onDelete={() => handleDeleteProductImage(product.id)}
-                />
-              );
-            })}
-          </div>
+                return (
+                  <ProductImageCard
+                    key={product.id}
+                    product={product}
+                    image={image}
+                    isSaving={isSaving}
+                    isSaved={isSaved}
+                    onUpload={(file) => handleProductImageUpload(product.id, file)}
+                    onDelete={() => handleDeleteProductImage(product.id)}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
 
       </div>
