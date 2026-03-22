@@ -70,6 +70,7 @@ interface SettingsContextType {
   getSectionLabel: (key: string) => SectionLabel;
   getProductsByCategory: (category: string) => Product[];
   getAllCategories: () => ProductCategoryDef[];
+  getCategoryLabel: (categoryId: string) => string;
   updateProductsData: (data: ProductsData) => Promise<void>;
 }
 
@@ -177,6 +178,14 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     return DEFAULT_CATEGORIES;
   }, [settings.productsData]);
 
+  const getCategoryLabel = useCallback((categoryId: string): string => {
+    const data = settings.productsData;
+    const found = data?.categories.find(c => c.id === categoryId);
+    if (found) return found.label;
+    const def = DEFAULT_CATEGORIES.find(c => c.id === categoryId);
+    return def?.label ?? categoryId;
+  }, [settings.productsData]);
+
   const updateProductsData = useCallback(async (data: ProductsData) => {
     await apiPost('/api/settings', { key: 'productsData', value: JSON.stringify(data) });
     await fetchSettings();
@@ -185,7 +194,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   return (
     <SettingsContext.Provider value={{
       settings, loading, updateSetting, deleteSetting,
-      getProductImage, getSectionLabel, getProductsByCategory, getAllCategories, updateProductsData,
+      getProductImage, getSectionLabel, getProductsByCategory, getAllCategories, getCategoryLabel, updateProductsData,
     }}>
       {children}
     </SettingsContext.Provider>

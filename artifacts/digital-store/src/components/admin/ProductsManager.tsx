@@ -357,7 +357,15 @@ export function ProductsManager() {
   const [renameValue, setRenameValue] = useState('');
 
   const categories = getAllCategories();
-  const products = getProductsByCategory(activeCategory);
+
+  React.useEffect(() => {
+    if (categories.length > 0 && !categories.find(c => c.id === activeCategory)) {
+      setActiveCategory(categories[0].id);
+    }
+  }, [categories, activeCategory]);
+
+  const validActiveCategory = categories.find(c => c.id === activeCategory) ? activeCategory : (categories[0]?.id ?? '');
+  const products = getProductsByCategory(validActiveCategory);
 
   function getCurrentData(): ProductsData {
     return settings.productsData ?? getDefaultProductsData();
@@ -400,8 +408,8 @@ export function ProductsManager() {
   async function handleAddProduct(formData: ProductFormData) {
     const data = getCurrentData();
     const newProduct: Product = {
-      id: newProductId(activeCategory),
-      category: activeCategory,
+      id: newProductId(validActiveCategory),
+      category: validActiveCategory,
       name: formData.name.trim(),
       badge: formData.badge.trim() || undefined,
       iconName: formData.iconName,

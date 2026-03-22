@@ -1,5 +1,5 @@
 import React from 'react';
-import { Product, CATEGORY_LABELS } from '@/lib/store-data';
+import { Product } from '@/lib/store-data';
 import { getIconComponent } from '@/lib/store-data';
 import { ShoppingCart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -13,8 +13,8 @@ interface ProductCardProps {
 export function ProductCard({ product, onClick }: ProductCardProps) {
   const Icon = getIconComponent(product.iconName);
   const minPrice = product.options.length > 0 ? Math.min(...product.options.map(o => o.price)) : 0;
-  const label = CATEGORY_LABELS[product.category] || product.category;
-  const { getProductImage } = useSettings();
+  const { getProductImage, getCategoryLabel } = useSettings();
+  const label = getCategoryLabel(product.category);
   const productImage = getProductImage(product.id);
 
   return (
