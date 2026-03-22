@@ -373,16 +373,18 @@ export function ProductsManager() {
     return settings.productsData ?? getDefaultProductsData();
   }
 
-  async function save(data: ProductsData) {
+  async function save(data: ProductsData): Promise<boolean> {
     setSaving(true);
     try {
       await updateProductsData(data);
+      return true;
     } catch {
       toast({
         title: "خطأ في الحفظ",
         description: "تعذّر حفظ التغييرات. يرجى المحاولة مجدداً.",
         variant: "destructive",
       });
+      return false;
     } finally {
       setSaving(false);
     }
@@ -409,8 +411,8 @@ export function ProductsManager() {
         options: formData.options.filter(o => o.name.trim()),
       };
     });
-    await save({ ...data, products: updated });
-    setEditingId(null);
+    const ok = await save({ ...data, products: updated });
+    if (ok) setEditingId(null);
   }
 
   async function handleAddProduct(formData: ProductFormData) {
@@ -426,8 +428,8 @@ export function ProductsManager() {
       features: formData.features.filter(f => f.trim()),
       options: formData.options.filter(o => o.name.trim()),
     };
-    await save({ ...data, products: [...data.products, newProduct] });
-    setShowAddProduct(false);
+    const ok = await save({ ...data, products: [...data.products, newProduct] });
+    if (ok) setShowAddProduct(false);
   }
 
   async function handleAddCategory() {
@@ -443,10 +445,12 @@ export function ProductsManager() {
       alert('هذه الفئة موجودة بالفعل');
       return;
     }
-    await save({ ...data, categories: [...data.categories, { id, label }] });
-    setActiveCategory(id);
-    setNewCategoryLabel('');
-    setShowAddCategory(false);
+    const ok = await save({ ...data, categories: [...data.categories, { id, label }] });
+    if (ok) {
+      setActiveCategory(id);
+      setNewCategoryLabel('');
+      setShowAddCategory(false);
+    }
   }
 
   async function handleDeleteCategory(catId: string) {
@@ -458,8 +462,8 @@ export function ProductsManager() {
     if (!confirm('هل تريد حذف هذه الفئة الفارغة؟')) return;
     const data = getCurrentData();
     const newCats = data.categories.filter(c => c.id !== catId);
-    await save({ ...data, categories: newCats });
-    if (activeCategory === catId) {
+    const ok = await save({ ...data, categories: newCats });
+    if (ok && activeCategory === catId) {
       setActiveCategory(newCats[0]?.id ?? '');
     }
   }
@@ -469,9 +473,11 @@ export function ProductsManager() {
     if (!label) { setRenaming(null); return; }
     const data = getCurrentData();
     const newCats = data.categories.map(c => c.id === catId ? { ...c, label } : c);
-    await save({ ...data, categories: newCats });
-    setRenaming(null);
-    setRenameValue('');
+    const ok = await save({ ...data, categories: newCats });
+    if (ok) {
+      setRenaming(null);
+      setRenameValue('');
+    }
   }
 
   return (
