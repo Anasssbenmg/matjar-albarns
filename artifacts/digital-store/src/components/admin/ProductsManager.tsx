@@ -664,7 +664,7 @@ export function ProductsManager() {
 
           {categories.length > 0 && (
             <p className="text-[10px] text-muted-foreground/50 text-center mt-3">
-              انقر مرتين على اسم الفئة للتغيير • الخ لحذف فئة
+              انقر على ✏️ لإعادة تسمية الفئة • مرّر على الفئة لحذفها
             </p>
           )}
         </>
