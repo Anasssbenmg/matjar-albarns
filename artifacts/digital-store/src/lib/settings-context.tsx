@@ -76,33 +76,33 @@ interface SettingsContextType {
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
 
-const API_ORIGIN = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? '';
-const BASE_PATH = import.meta.env.BASE_URL?.replace(/\/$/, '') || '';
+const FIREBASE_URL = 'https://buisiness-40599-default-rtdb.firebaseio.com';
 
-function apiUrl(path: string) {
-  return API_ORIGIN ? `${API_ORIGIN}${path}` : `${BASE_PATH}${path}`;
-}
-
-async function apiGet(path: string) {
-  const res = await fetch(apiUrl(path));
+async function apiGet(_path: string) {
+  const res = await fetch(`${FIREBASE_URL}/settings.json`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
+  const data = await res.json();
+  return { success: true, data: (data as Record<string, string>) ?? {} };
 }
 
-async function apiPost(path: string, body: unknown) {
-  const res = await fetch(apiUrl(path), {
-    method: 'POST',
+async function apiPost(_path: string, body: unknown) {
+  const { key, value } = body as { key: string; value: string };
+  const res = await fetch(`${FIREBASE_URL}/settings/${encodeURIComponent(key)}.json`, {
+    method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify(value),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
+  return { success: true };
 }
 
 async function apiDelete(path: string) {
-  const res = await fetch(apiUrl(path), { method: 'DELETE' });
+  const key = path.split('/').pop() ?? '';
+  const res = await fetch(`${FIREBASE_URL}/settings/${encodeURIComponent(key)}.json`, {
+    method: 'DELETE',
+  });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
+  return { success: true };
 }
 
 function parseSettings(raw: Record<string, string>): Settings {
