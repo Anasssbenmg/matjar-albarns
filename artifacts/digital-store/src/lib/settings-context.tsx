@@ -76,16 +76,21 @@ interface SettingsContextType {
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
 
+const API_ORIGIN = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? '';
 const BASE_PATH = import.meta.env.BASE_URL?.replace(/\/$/, '') || '';
 
+function apiUrl(path: string) {
+  return API_ORIGIN ? `${API_ORIGIN}${path}` : `${BASE_PATH}${path}`;
+}
+
 async function apiGet(path: string) {
-  const res = await fetch(`${BASE_PATH}${path}`);
+  const res = await fetch(apiUrl(path));
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
 
 async function apiPost(path: string, body: unknown) {
-  const res = await fetch(`${BASE_PATH}${path}`, {
+  const res = await fetch(apiUrl(path), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -95,7 +100,7 @@ async function apiPost(path: string, body: unknown) {
 }
 
 async function apiDelete(path: string) {
-  const res = await fetch(`${BASE_PATH}${path}`, { method: 'DELETE' });
+  const res = await fetch(apiUrl(path), { method: 'DELETE' });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
